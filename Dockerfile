@@ -2,14 +2,17 @@ FROM node:20-slim
 
 WORKDIR /usr/src/app
 
-# Instala dependencias del sistema necesarias (como Python para algunas builds)
+# Instala dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
     python3 \
     make \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala evolution-manager GLOBALMENTE con sus dependencias
+# Instala fs-extra globalmente primero
+RUN npm install -g fs-extra
+
+# Luego instala evolution-manager con todas sus dependencias
 RUN npm install -g evolution-manager@0.4.13
 
 # Crea el enlace simbólico para node
