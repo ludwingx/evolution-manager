@@ -9,16 +9,17 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Instala fs-extra globalmente primero
-RUN npm install -g fs-extra
+# Instala Vite y fs-extra primero (requerimientos críticos)
+RUN npm install -g vite fs-extra
 
-# Luego instala evolution-manager con todas sus dependencias
+# Luego instala evolution-manager
 RUN npm install -g evolution-manager@0.4.13
 
-# Crea el enlace simbólico para node
+# Crea enlaces simbólicos necesarios
 RUN ln -s /usr/local/bin/node /usr/bin/node
+RUN ln -s /usr/local/bin/npm /usr/bin/npm
 
-# Expone el puerto que usa Evolution API
+# Expone el puerto
 EXPOSE 9615
 
 # Comando de inicio
