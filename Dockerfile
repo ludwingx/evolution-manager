@@ -1,26 +1,15 @@
-FROM node:20-slim
+FROM node:20
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Instala dependencias del sistema necesarias
-RUN apt-get update && apt-get install -y \
-    python3 \
-    make \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+# Instala todas las dependencias en un solo paso para evitar problemas de caché
+RUN apt-get update && \
+    apt-get install -y python3 make g++ && \
+    npm install -g vite@latest fs-extra evolution-manager@0.4.13 && \
+    ln -s /usr/local/bin/node /usr/bin/node && \
+    ln -s /usr/local/bin/npm /usr/bin/npm && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Instala Vite y fs-extra primero (requerimientos críticos)
-RUN npm install -g vite fs-extra
-
-# Luego instala evolution-manager
-RUN npm install -g evolution-manager@0.4.13
-
-# Crea enlaces simbólicos necesarios
-RUN ln -s /usr/local/bin/node /usr/bin/node
-RUN ln -s /usr/local/bin/npm /usr/bin/npm
-
-# Expone el puerto
 EXPOSE 9615
-
-# Comando de inicio
 CMD ["evolution-manager", "server", "start"]
